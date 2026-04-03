@@ -1,26 +1,18 @@
 [package]
-name = "{{ project_name }}"
+name = "nrf52840_planck59"
 version = "0.2.0"
 authors = ["Haobo Gu <haobogu@outlook.com>"]
 description = "Keyboard firmware written in Rust"
 homepage = "https://github.com/haobogu/rmk"
 repository = "https://github.com/haobogu/rmk"
 readme = "README.md"
-edition = "2021"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-rmk = { version = "0.8", features = ["async_matrix", "nrf52840_ble", "adafruit_bl"] }
-nrf-sdc = { git = "https://github.com/alexmoon/nrf-sdc", rev = "11d5c3c", features = [
-    "defmt",
-    "peripheral",
-    "nrf52840",
-] }
-nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc", rev = "11d5c3c", features = [
-    "defmt",
-    "critical-section-impl",
-    "nrf52840",
-] }
+rmk = { git = "https://github.com/HaoboGu/rmk", tag = "rmk-v0.8.2" }
+#nrf-sdc = { path = "../nrf-sdc/nrf-sdc", features = ["defmt", "peripheral", "nrf52840"] }
+#nrf-mpsl = { path = "../nrf-sdc/nrf-mpsl", features = ["defmt", "critical-section-impl", "nrf52840"] }
 bt-hci = { version = "0.6", default-features = false, features = ["defmt"] }
 
 cortex-m = "0.7.7"
@@ -55,7 +47,7 @@ json = "0.12"
 const-gen = "1.6"
 
 [[bin]]
-name = "{{ project_name }}"
+name = "nrf52840_planck67"
 test = false
 bench = false
 
@@ -72,4 +64,4 @@ codegen-units = 1       # better optimizations
 debug = true            # no overhead for bare-metal
 opt-level = "z"         # optimize for binary size
 overflow-checks = false
-lto = "fat"
+lto = false
