@@ -22,7 +22,7 @@ jobs:
 
       - name: Build firmware
         working-directory: nrf52840
-        run: cargo make --release
+        run: cargo make --makefile Makefile.toml build --release
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
