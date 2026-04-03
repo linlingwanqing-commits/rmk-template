@@ -17,12 +17,9 @@ jobs:
           rustup target add thumbv7em-none-eabihf
           rustup component add rust-src
 
-      - name: Install cargo-make
-        run: cargo install cargo-make
-
       - name: Build firmware
         working-directory: nrf52840_ble
-        run: cargo make --makefile Makefile.toml build --release
+        run: cargo build --release
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
