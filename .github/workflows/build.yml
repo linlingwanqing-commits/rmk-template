@@ -21,11 +21,11 @@ jobs:
         run: cargo install cargo-make
 
       - name: Build firmware
-        working-directory: nrf52840
+        working-directory: nrf52840_ble
         run: cargo make --makefile Makefile.toml build --release
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: planck59-firmware
-          path: nrf52840/target/thumbv7em-none-eabihf/release/*.uf2
+          path: nrf52840_ble/target/thumbv7em-none-eabihf/release/*.uf2
