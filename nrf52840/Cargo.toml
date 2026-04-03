@@ -47,7 +47,7 @@ json = "0.12"
 const-gen = "1.6"
 
 [[bin]]
-name = "nrf52840_planck67"
+name = "nrf52840_planck59"
 test = false
 bench = false
 
