@@ -13,7 +13,7 @@ license = "MIT OR Apache-2.0"
 rmk = { git = "https://github.com/HaoboGu/rmk", rev = "main" }
 rmk-macro = { git = "https://github.com/HaoboGu/rmk", rev = "main" }
 # 其他依赖正常写，不需要改
-] }
+ }
 nrf-sdc = { git = "https://github.com/haobogu/nrf-sdc", rev = "ffe59a7aefaaa145a3d2474602f33387f80dcefa", features = [
     "defmt",
     "peripheral",
