@@ -21,7 +21,7 @@ keymap = [
         ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LeftBracket", "RightBracket"],
         ["CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "Enter"],
         ["LShift", "Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Up", "Slash", "RShift"],
-        ["LCtrl", "LGui", "Delete", "LAlt", "No", "Space","", "No", "Left", "Down", "Right", "RCtrl", "No"]
+        ["LCtrl", "LGui", "Delete", "LAlt",  "Space","No", "No","No", "Space", "Left", "Down", "Right", "RCtrl"]
     ],
     # 第1层
     [
@@ -29,7 +29,7 @@ keymap = [
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No","", "No", "No", "No", "No", "No", "No"]
+        ["No", "No", "No", "No", "No", "No","No", "No", "No", "No", "No", "No", "No"]
     ],
     # 第2层
     [
@@ -37,7 +37,7 @@ keymap = [
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No", "","No", "No", "No", "No", "No", "No"]
+        ["No", "No", "No", "No", "No", "No", "No","No", "No", "No", "No", "No", "No"]
     ]
 ]
 
