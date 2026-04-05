@@ -1,6 +1,6 @@
 [keyboard]
-name = "gcjj"
-product_name = "planck59"
+name = "rmk-keyboard"
+product_name = "rmk-keyboard"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "RMK"
@@ -15,43 +15,42 @@ rows = 5
 cols = 13
 layers = 3
 keymap = [
-    # ========== 第0层（默认层）==========
+    # 第0层
     [
-        "Escape", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Kc6", "Kc7", "Kc8", "Kc9", "Kc0", "Grave", "Backspace",
-        "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LeftBracket", "RightBracket",
-        "CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "Enter",
-        "LShift", "Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Up", "Slash", "RShift",
-        "LCtrl", "LGui", "Delete", "LAlt", "_", "MO(1)", "Space", "_", "Left", "Down", "Right", "RCtrl", "_",
+        ["Escape", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Kc6", "Kc7", "Kc8", "Kc9", "Kc0", "Grave", "Backspace"],
+        ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LeftBracket", "RightBracket"],
+        ["CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "Enter"],
+        ["LShift", "Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Up", "Slash", "RShift"],
+        ["LCtrl", "LGui", "Delete", "LAlt", "No", "Space", "No", "Left", "Down", "Right", "RCtrl", "No"]
     ],
-    # ========== 第1层（Fn层）==========
+    # 第1层
     [
-        "Grave", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
+        ["Grave", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"]
     ],
-    # ========== 第2层（小键盘层）==========
+    # 第2层
     [
-        "KpSlash", "KpAsterisk", "KpMinus", "Kp7", "Kp8", "Kp9", "KpPlus", "Kp4", "Kp5", "Kp6", "Kp1", "Kp2", "Kp3",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-        "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_",
-    ],
+        ["KpSlash", "KpAsterisk", "KpMinus", "Kp7", "Kp8", "Kp9", "KpPlus", "Kp4", "Kp5", "Kp6", "Kp1", "Kp2", "Kp3"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"]
+    ]
 ]
-
-[vial]
-enabled = true
-uuid = "c0ffee00-0000-0000-0000-000000000001"
-
-[lighting]
-enabled = true
-
-[lighting.ws2812]
-pin = "P0_09"
-num_leds = 64   # 5×13 轴灯，每个按键一个灯
 
 [ble]
 enabled = true
-# 电池检测已禁用，释放 P0.04 给矩阵
+# vddh has an internal voltage divider
+# battery_adc_pin = "vddh"
+# Or
+# battery_adc_pin = "P0_04"
+# adc_divider_measured = 2000
+# adc_divider_total = 2806
+
+# charge_state.pin = "P0_25"
+# charge_state.low_active = false
+# charge_led.pin = "P0_29"
+# charge_led.low_active = false
