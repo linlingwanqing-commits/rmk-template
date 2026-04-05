@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libudev-dev
-        
+
       - name: Install Rust
         run: |
           rustup update stable
@@ -22,23 +22,23 @@ jobs:
 
       - name: Install flip-link
         run: cargo install flip-link
-        
+
       - name: Install elf2uf2-rs
         run: cargo install elf2uf2-rs
-        
+
       - name: Build firmware
         working-directory: nrf52840_ble
         run: cargo build --release
-        
+
       - name: List files
         working-directory: nrf52840_ble
         run: ls -la target/thumbv7em-none-eabihf/release/
 
-      - - name: Convert ELF to UF2
+      - name: Convert ELF to UF2
         working-directory: nrf52840_ble
         run: |
           elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 target/thumbv7em-none-eabihf/release/planck59.uf2
-          
+
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
