@@ -17,6 +17,9 @@ jobs:
           rustup target add thumbv7em-none-eabihf
           rustup component add rust-src
 
+      - name: Install flip-link
+        run: cargo install flip-link
+
       - name: Build firmware
         working-directory: nrf52840_ble
         run: cargo build --release
