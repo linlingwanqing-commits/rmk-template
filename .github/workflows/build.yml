@@ -34,13 +34,10 @@ jobs:
         working-directory: nrf52840_ble
         run: ls -la target/thumbv7em-none-eabihf/release/
 
-      - name: Convert ELF to UF2
+      - - name: Convert ELF to UF2
         working-directory: nrf52840_ble
         run: |
-          # 找到 ELF 文件（没有后缀的那个）
-          ELF=$(ls target/thumbv7em-none-eabihf/release/ | grep -v '\.' | head -1)
-          echo "Found ELF: $ELF"
-          elf2uf2-rs target/thumbv7em-none-eabihf/release/$ELF target/thumbv7em-none-eabihf/release/$ELF.uf2
+          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 target/thumbv7em-none-eabihf/release/planck59.uf2
           
       - name: Upload firmware
         uses: actions/upload-artifact@v4
