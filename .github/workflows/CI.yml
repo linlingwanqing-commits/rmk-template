@@ -34,6 +34,19 @@ jobs:
         env:
           RUST_MIN_STACK: 67108864
 
+      - name: 获取 ELF 文件名
+        id: get_name
+        working-directory: nrf52840_ble
+        run: |
+          # 从 Cargo.toml 读取项目名
+          PROJECT_NAME=$(grep '^name =' Cargo.toml | head -1 | cut -d '"' -f2)
+          echo "project_name=$PROJECT_NAME" >> $GITHUB_OUTPUT
+          echo "项目名: $PROJECT_NAME"
+          
+          # 列出 ELF 文件确认
+          echo "ELF 文件列表:"
+          ls -la target/thumbv7em-none-eabihf/release/ | grep -v "\.d"
+
       - name: Generate UF2 (方法1 - 使用 cargo-make)
         working-directory: nrf52840_ble
         continue-on-error: true
@@ -44,17 +57,13 @@ jobs:
         if: always()
         run: |
           cargo install elf2uf2-rs --force
-          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 planck59.uf2 || true
+          PROJECT_NAME="${{ steps.get_name.outputs.project_name }}"
+          elf2uf2-rs "target/thumbv7em-none-eabihf/release/$PROJECT_NAME" "${PROJECT_NAME}.uf2" || true
 
-      - name: Generate UF2 (方法3 - 使用 Python)
-        working-directory: nrf52840_ble
-        if: always()
-        run: |
-          wget -q https://raw.githubusercontent.com/microsoft/uf2/master/utils/uf2conv.py
-          python3 uf2conv.py target/thumbv7em-none-eabihf/release/planck59 -b 0x1000 -c -f 0xADA52840 -o planck59.uf2
+     
 
       - name: Upload UF2
         uses: actions/upload-artifact@v4
         with:
-          name: planck59-uf2
+          name: firmware-uf2
           path: nrf52840_ble/*.uf2
