@@ -1,7 +1,7 @@
 {
-    "name": "rmk-keyboard",
-    "vendorId": "0x4C4B",
-    "productId": "0x4643",
+    "name": "planck59",
+    "vendorId": "0x4743",
+    "productId": "0x5942",
     "lighting": "none",
     "matrix": {
         "rows": 5,

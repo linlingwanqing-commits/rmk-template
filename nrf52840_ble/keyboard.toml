@@ -13,44 +13,52 @@ col_pins = ["P0_17", "P0_20", "P0_22", "P0_24", "P1_00", "P0_11", "P1_04", "P0_3
 [layout]
 rows = 5
 cols = 13
-layers = 3
+layers = 4  # 改成4层（0,1,2,3）
 keymap = [
-    # 第0层
+    # 第0层：基础层
     [
-        ["Escape", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Kc6", "Kc7", "Kc8", "Kc9", "Kc0", "Grave", "Backspace"],
+        ["Escape", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Kc6", "Kc7", "Kc8", "Kc9", "Kc0", "Backslash", "Backspace"],
         ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LeftBracket", "RightBracket"],
-        ["CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "Enter"],
+        ["LayerTap(2, CapsLock)", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "LayerTap(2, Enter)"],
         ["LShift", "Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Up", "Slash", "RShift"],
-        ["LCtrl", "LGui", "Delete", "LAlt",  "Space","No", "No","No", "Space", "Left", "Down", "Right", "RCtrl"]
+        ["LCtrl", "LGui", "LAlt", "Space", "Space", "Mo(1)", "Mo(3)", "Space", "Left", "Down", "Right", "RCtrl"]
     ],
-    # 第1层
+    # 第1层：Fn层
     [
         ["Grave", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["To(3)", "No", "No", "To(0)", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No","No", "No", "No", "No", "No", "No", "No"]
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"]
     ],
-    # 第2层
+    # 第2层：Sleep/PrtSc层
     [
-        ["KpSlash", "KpAsterisk", "KpMinus", "Kp7", "Kp8", "Kp9", "KpPlus", "Kp4", "Kp5", "Kp6", "Kp1", "Kp2", "Kp3"],
+        ["Sleep", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "PrintScreen"],
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "RmToggle"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No", "No","No", "No", "No", "No", "No", "No"]
+        ["Home", "End", "PageUp", "PageDown", "No", "No", "No", "No", "RmPrev", "RmVald", "RmValu", "RmNext"]
+    ],
+    # 第3层：数字小键盘层
+    [
+        ["Escape", "KpMinus", "KpPlus", "KpSlash", "Kp1", "Kp2", "Kp3", "Kp4", "Kp5", "Kp6", "Kp7", "Kp8", "Backspace"],
+        ["Kp7", "Kp8", "Kp9", "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O"],
+        ["Kp4", "Kp5", "Kp6", "KpAsterisk", "A", "S", "D", "F", "G", "H", "J", "K", "L"],
+        ["Kp1", "Kp2", "Kp3", "LShift", "Z", "X", "C", "V", "B", "N", "M", "P", "Backslash"],
+        ["Backspace", "KpDot", "Kp0", "LCtrl", "LGui", "Mo(1)", "LAlt", "Space", "Left", "Down", "Up", "Right"]
     ]
 ]
 
 [ble]
 enabled = true
-# vddh has an internal voltage divider
-# battery_adc_pin = "vddh"
-# Or
-# battery_adc_pin = "P0_04"
-# adc_divider_measured = 2000
-# adc_divider_total = 2806
+name = "planck59"
+start_adv_on_boot = true
 
-# charge_state.pin = "P0_25"
-# charge_state.low_active = false
-# charge_led.pin = "P0_29"
-# charge_led.low_active = false
+# 电池检测（nRF52840 Pro Micro 用 vddh）
+battery_adc_pin = "vddh"
+adc_divider_measured = 2000
+adc_divider_total = 2806
+
+# 电源管理（关键：USB 插拔检测）
+[power]
+usb_power_detect_pin = "P0_09"
