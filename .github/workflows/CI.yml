@@ -46,12 +46,7 @@ jobs:
           cargo install elf2uf2-rs --force
           elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 planck59.uf2 || true
 
-      - name: Generate UF2 (方法3 - 使用 Python)
-        working-directory: nrf52840_ble
-        if: always()
-        run: |
-          wget -q https://raw.githubusercontent.com/microsoft/uf2/master/utils/uf2conv.py
-          python3 uf2conv.py target/thumbv7em-none-eabihf/release/planck59 -b 0x1000 -c -f 0xADA52840 -o planck59.uf2
+     
 
       - name: Upload UF2
         uses: actions/upload-artifact@v4

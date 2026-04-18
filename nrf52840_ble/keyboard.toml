@@ -21,7 +21,7 @@ keymap = [
         ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LeftBracket", "RightBracket"],
         ["LayerTap(2, CapsLock)", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "LayerTap(2, Enter)"],
         ["LShift", "Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Up", "Slash", "RShift"],
-        ["LCtrl", "LGui", "LAlt", "Space", "Space", "Mo(1)", "Mo(3)", "Space", "Left", "Down", "Right", "RCtrl"]
+        ["LCtrl", "LGui", "LAlt", "Space", "Space", "Mo(1)", "No", "Mo(3)", "Space", "Left", "Down", "Right", "RCtrl"]
     ],
     # 第1层：Fn层
     [
@@ -29,7 +29,7 @@ keymap = [
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["To(3)", "No", "No", "To(0)", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"]
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"]
     ],
     # 第2层：Sleep/PrtSc层
     [
@@ -37,7 +37,7 @@ keymap = [
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "RmToggle"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["Home", "End", "PageUp", "PageDown", "No", "No", "No", "No", "RmPrev", "RmVald", "RmValu", "RmNext"]
+        ["Home", "End", "PageUp", "PageDown", "No", "No", "No", "No", "No", "RmPrev", "RmVald", "RmValu", "RmNext"]
     ],
     # 第3层：数字小键盘层
     [
@@ -45,7 +45,7 @@ keymap = [
         ["Kp7", "Kp8", "Kp9", "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O"],
         ["Kp4", "Kp5", "Kp6", "KpAsterisk", "A", "S", "D", "F", "G", "H", "J", "K", "L"],
         ["Kp1", "Kp2", "Kp3", "LShift", "Z", "X", "C", "V", "B", "N", "M", "P", "Backslash"],
-        ["Backspace", "KpDot", "Kp0", "LCtrl", "LGui", "Mo(1)", "LAlt", "Space", "Left", "Down", "Up", "Right"]
+        ["Backspace", "KpDot", "Kp0", "LCtrl", "LGui", "Mo(1)", "No", "LAlt", "Space", "Left", "Down", "Up", "Right"]
     ]
 ]
 
