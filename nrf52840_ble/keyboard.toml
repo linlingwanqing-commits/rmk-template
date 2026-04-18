@@ -1,8 +1,8 @@
 [keyboard]
-name = "rmk-keyboard"
-product_name = "rmk-keyboard"
-vendor_id = 0x4c4b
-product_id = 0x4643
+name = "planck59"
+product_name = "planck59"
+vendor_id = 0x4743
+product_id = 0x5942
 manufacturer = "RMK"
 chip = "nrf52840"
 
