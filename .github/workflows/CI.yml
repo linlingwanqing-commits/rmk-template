@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
+      - name: Install Rust
+        run: |
+          rustup update stable
+          rustup target add thumbv7em-none-eabihf
+          rustup component add rust-src
+
+      - name: Install cargo-make and flip-link
+        run: cargo install cargo-make flip-link
+
+      - name: Build firmware and convert to UF2
+        working-directory: nrf52840_ble
+        run: cargo make uf2 --release
+
+      - name: Upload UF2 firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: planck59-uf2
+          path: nrf52840_ble/*.uf2
+
+      - name: Upload ELF firmware (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: planck59-elf
+          path: nrf52840_ble/target/thumbv7em-none-eabihf/release/planck59
