@@ -28,16 +28,26 @@ jobs:
           cargo install flip-link
           cargo install elf2uf2-rs
 
-      - name: Build firmware
+      - name: Build firmware (生成 ELF)
         working-directory: nrf52840_ble
         run: cargo build --release
         env:
           RUST_MIN_STACK: 67108864
 
+      - name: 查看 ELF 信息（调试用）
+        working-directory: nrf52840_ble
+        run: |
+          file target/thumbv7em-none-eabihf/release/planck59
+          cargo size --release
+
       - name: Convert to UF2
         working-directory: nrf52840_ble
         run: |
-          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 planck59.uf2
+          # 方案1：指定 nRF52840 家族 ID
+          elf2uf2-rs -f 0xADA52840 target/thumbv7em-none-eabihf/release/planck59 planck59.uf2
+          
+          # 如果上面不行，试试方案2
+          # elf2uf2-rs -c nRF52840_xxAA target/thumbv7em-none-eabihf/release/planck59 planck59.uf2
 
       - name: Upload UF2 firmware
         uses: actions/upload-artifact@v4
