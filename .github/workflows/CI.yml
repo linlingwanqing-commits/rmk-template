@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+env:
+  RUST_MIN_STACK: 67108864
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,21 +23,24 @@ jobs:
           rustup target add thumbv7em-none-eabihf
           rustup component add rust-src
 
-      - name: Install cargo-make and flip-link
-        run: cargo install cargo-make flip-link
+      - name: Install flip-link and elf2uf2-rs
+        run: |
+          cargo install flip-link
+          cargo install elf2uf2-rs
 
-      - name: Build firmware and convert to UF2
+      - name: Build firmware
         working-directory: nrf52840_ble
-        run: cargo make uf2 --release
+        run: cargo build --release
+        env:
+          RUST_MIN_STACK: 67108864
+
+      - name: Convert to UF2
+        working-directory: nrf52840_ble
+        run: |
+          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 planck59.uf2
 
       - name: Upload UF2 firmware
         uses: actions/upload-artifact@v4
         with:
           name: planck59-uf2
-          path: nrf52840_ble/*.uf2
-
-      - name: Upload ELF firmware (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: planck59-elf
-          path: nrf52840_ble/target/thumbv7em-none-eabihf/release/planck59
+          path: nrf52840_ble/planck59.uf2
