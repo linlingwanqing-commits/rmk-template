@@ -33,11 +33,11 @@ keymap = [
     ],
     # 第2层：Sleep/PrtSc层
     [
-        ["Sleep", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "PrintScreen"],
-        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "RmToggle"],
+        ["Stop", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "PrintScreen"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
         ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
-        ["Home", "End", "PageUp", "PageDown", "No", "No", "No", "No", "No", "RmPrev", "RmVald", "RmValu", "RmNext"]
+        ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "No"],
+        ["Home", "End", "PageUp", "PageDown", "No", "No", "No", "No", "No", "No", "No", "No", "No"]
     ],
     # 第3层：数字小键盘层
     [
