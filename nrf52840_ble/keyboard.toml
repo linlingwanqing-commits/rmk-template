@@ -51,14 +51,14 @@ keymap = [
 
 [ble]
 enabled = true
-name = "planck59"
-start_adv_on_boot = true
-
-# 电池检测（nRF52840 Pro Micro 用 vddh）
+vddh has an internal voltage divider
 battery_adc_pin = "vddh"
-adc_divider_measured = 2000
-adc_divider_total = 2806
+# Or
+# battery_adc_pin = "P0_04"
+# adc_divider_measured = 2000
+# adc_divider_total = 2806
 
-# 电源管理（关键：USB 插拔检测）
-[power]
-usb_power_detect_pin = "P0_09"
+# charge_state.pin = "P0_25"
+# charge_state.low_active = false
+# charge_led.pin = "P0_29"
+# charge_led.low_active = false
