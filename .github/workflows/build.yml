@@ -23,12 +23,26 @@ jobs:
       - name: Install flip-link
         run: cargo install flip-link
 
+      - name: Install elf2uf2-rs
+        run: cargo install elf2uf2-rs
+
       - name: Build firmware
         working-directory: nrf52840_ble
         run: cargo build --release
+
+      - name: Convert ELF to UF2
+        working-directory: nrf52840_ble
+        run: |
+          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 target/planck59.uf2
 
       - name: Upload ELF firmware
         uses: actions/upload-artifact@v4
         with:
           name: planck59-elf
           path: nrf52840_ble/target/thumbv7em-none-eabihf/release/planck59
+
+      - name: Upload UF2 firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: planck59-uf2
+          path: nrf52840_ble/target/planck59.uf2
