@@ -1,8 +1,8 @@
-name: CI
+name: Build Firmware
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, s46r ]
   workflow_dispatch:
 
 env:
@@ -23,34 +23,38 @@ jobs:
           rustup target add thumbv7em-none-eabihf
           rustup component add rust-src
 
-      - name: Install flip-link and elf2uf2-rs
+      - name: Install cargo-make and flip-link
         run: |
+          cargo install cargo-make
           cargo install flip-link
-          cargo install elf2uf2-rs
 
-      - name: Build firmware (生成 ELF)
+      - name: Build firmware
         working-directory: nrf52840_ble
         run: cargo build --release
         env:
           RUST_MIN_STACK: 67108864
 
-      - name: 查看 ELF 信息（调试用）
+      - name: Generate UF2 (方法1 - 使用 cargo-make)
         working-directory: nrf52840_ble
-        run: |
-          file target/thumbv7em-none-eabihf/release/planck59
-          cargo size --release
+        continue-on-error: true
+        run: cargo make uf2 --release
 
-      - name: Convert to UF2
+      - name: Generate UF2 (方法2 - 使用 elf2uf2-rs)
         working-directory: nrf52840_ble
+        if: always()
         run: |
-          # 方案1：指定 nRF52840 家族 ID
-          elf2uf2-rs -f 0xADA52840 target/thumbv7em-none-eabihf/release/planck59 planck59.uf2
-          
-          # 如果上面不行，试试方案2
-          # elf2uf2-rs -c nRF52840_xxAA target/thumbv7em-none-eabihf/release/planck59 planck59.uf2
+          cargo install elf2uf2-rs --force
+          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 planck59.uf2 || true
 
-      - name: Upload UF2 firmware
+      - name: Generate UF2 (方法3 - 使用 Python)
+        working-directory: nrf52840_ble
+        if: always()
+        run: |
+          wget -q https://raw.githubusercontent.com/microsoft/uf2/master/utils/uf2conv.py
+          python3 uf2conv.py target/thumbv7em-none-eabihf/release/planck59 -b 0x1000 -c -f 0xADA52840 -o planck59.uf2
+
+      - name: Upload UF2
         uses: actions/upload-artifact@v4
         with:
           name: planck59-uf2
-          path: nrf52840_ble/planck59.uf2
+          path: nrf52840_ble/*.uf2
