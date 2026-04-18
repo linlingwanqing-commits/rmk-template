@@ -15,7 +15,7 @@ install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = [
     "--help",
 ] }
 command = "cargo"
-args = ["objcopy", "--release", "--", "-O", "ihex", "planck59.hex"]
+args = ["objcopy", "--release", "--", "-O", "ihex", "rmk-keyboard.hex"]
 dependencies = ["build"]
 
 [tasks.uf2]
@@ -27,9 +27,9 @@ command = "cargo"
 args = [
     "hex-to-uf2",
     "--input-path",
-    "planck59.hex",
+    "rmk-keyboard.hex",
     "--output-path",
-    "planck59.uf2",
+    "rmk-keyboard.uf2",
     "--family",
     "nrf52840",
 ]
