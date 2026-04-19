@@ -33,7 +33,7 @@ morses = [
   { tap = "Enter", hold = "MO(2)",hold_after_tap = "NumLock" },
 
   # td(2): Navigation key that outputs Tab on tap, Escape on double tap, layer 2 on hold
-  { tap = "Delete", hold = "RShift" }
+  { tap = "Delete", hold = "RShift" },
 
  
 
