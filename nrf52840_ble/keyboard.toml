@@ -27,10 +27,10 @@ gap_timeout = "250ms"
 # list of morse (tap dance) keys:
 morses = [
   # td(0): Function key that outputs F1 on tap, F2 on double tap, layer 1 on hold
-  { tap = "KpEnter",  hold = "MO(2)" hold_after_tap = "CapsLock"},
+  { tap = "KpEnter",  hold = "MO(2)" ,hold_after_tap = "CapsLock"},
 
   # td(1): Modifier key that outputs Shift on hold, Alt on hold after tap,
-  { tap = "Enter", hold = "MO(2)"hold_after_tap = "NumLock" },
+  { tap = "Enter", hold = "MO(2)",hold_after_tap = "NumLock" },
 
   # td(2): Navigation key that outputs Tab on tap, Escape on double tap, layer 2 on hold
   { tap = "Delete", hold = "RShift" },
