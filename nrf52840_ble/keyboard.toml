@@ -35,7 +35,7 @@ morses = [
   # td(2): Navigation key that outputs Tab on tap, Escape on double tap, layer 2 on hold
   { tap = "Delete", hold = "RShift" },
 
- 
+ ]
 
 # these can be used to override the default morse profile given in [behavior.morse]
 [behavior.morse.profiles]
