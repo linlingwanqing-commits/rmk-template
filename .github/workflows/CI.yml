@@ -29,7 +29,7 @@ jobs:
           cargo install flip-link
 
       - name: Build firmware
-        working-directory: nrf52840_ble
+        working-directory: esp32_planck59
         run: cargo build --release
         env:
           RUST_MIN_STACK: 67108864
