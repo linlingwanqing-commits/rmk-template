@@ -10,7 +10,7 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-rmk = { path = "../../../rmk", default-features = false, features = [
+rmk = { path = "https://github.com/HaoboGu/rmk", default-features = false, features = [
     "esp32s3_ble",
     "log",
     "storage",
