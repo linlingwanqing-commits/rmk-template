@@ -31,6 +31,20 @@ jobs:
           cargo install cargo-espflash
           cargo install espflash
 
+      - name: Install esp toolchain
+        run: |
+          cargo install espup
+          espup install
+          source ~/export-esp.sh
+        shell: bash
+
+      - name: Build firmware
+        working-directory: esp32_planck59
+        run: |
+          source ~/export-esp.sh
+          cargo build --release
+        shell: bash
+
       - name: Build firmware for ESP32-S3
         working-directory: esp32_planck59   # 你的项目目录
         run: cargo build --release
