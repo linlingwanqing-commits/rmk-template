@@ -67,32 +67,11 @@ async fn main(_s: Spawner) {
     let flash = async_flash_wrapper(flash);
 
     // Initialize the IO pins
-   let (row_pins, col_pins) = config_matrix_pins_esp!(
-    peripherals: peripherals,
-    input: [GPIO4, GPIO5, GPIO6, GPIO7, GPIO15],   // 行
-    output: [GPIO16, GPIO17, GPIO18, GPIO8, GPIO9, GPIO10, GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO2, GPIO1]  // 列
-);
-
-   use rmk::behavior::morse::{Morse, MorseAction};
-
-   fn custom_morse_config() -> Vec<Morse> {
-    vec![
-        Morse::new(&[
-            MorseAction::Tap(k!(KcEnter)),
-            MorseAction::Hold(mo!(2)),
-            MorseAction::HoldAfterTap(k!(KcCapsLock)),
-        ]),
-        Morse::new(&[
-            MorseAction::Tap(k!(KcEnter)),
-            MorseAction::Hold(mo!(2)),
-            MorseAction::HoldAfterTap(k!(KcNumLock)),
-        ]),
-        Morse::new(&[
-            MorseAction::Tap(k!(KcDelete)),
-            MorseAction::Hold(k!(KcRightShift)),
-        ]),
-    ]
-}
+    let (row_pins, col_pins) = config_matrix_pins_esp!(
+        peripherals: peripherals,
+        input: [GPIO4, GPIO5, GPIO6, GPIO7, GPIO15],   // 行
+        output: [GPIO16, GPIO17, GPIO18, GPIO8, GPIO9, GPIO10, GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO2, GPIO1]  // 列
+    );
 
     // RMK config
     let vial_config = VialConfig::new(VIAL_KEYBOARD_ID, VIAL_KEYBOARD_DEF, &[(0, 0), (1, 1)]);
