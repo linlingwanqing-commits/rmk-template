@@ -10,7 +10,7 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-rmk = { path = "https://github.com/HaoboGu/rmk", default-features = false, features = [
+rmk = { git = "https://github.com/HaoboGu/rmk", default-features = false, features = [
     "esp32s3_ble",
     "log",
     "storage",
@@ -53,7 +53,7 @@ opt-level = 3
 opt-level = "s"
 
 [profile.release]
-codegen-units = 1        # LLVM can perform better optimizations using a single thread
+codegen-units = 1
 debug = 2
 debug-assertions = false
 incremental = false
