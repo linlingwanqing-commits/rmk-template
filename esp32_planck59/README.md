@@ -1,10 +1,6 @@
-# RMK 
+# esp32s3 BLE example
 
-RMK is a feature-rich and easy-to-use keyboard firmware.
-
-## Use the template
-
-To run this firmware, you should have latest Rust installed. The full instruction of installing esp Rust toolchain can be found [here](https://docs.esp-rs.org/book/installation/index.html).
+To run this example, you should have latest Rust in **esp** channel installed. The full instruction of installing esp Rust toolchain can be found [here](https://docs.esp-rs.org/book/installation/index.html).
 
 [`espflash`](https://github.com/esp-rs/espflash) should also be installed:
 
@@ -15,7 +11,8 @@ cargo install cargo-espflash espflash
 After having everything installed, use the following command to run the example:
 
 ```
-cargo run --release
+cd examples/use_rust/esp32s3_ble
+cargo +esp run --release
 ```
 
 If everything is good, you'll see the log as the following:

@@ -1,38 +1,36 @@
 [package]
-name = "{{ project_name }}"
-version = "0.1.0"
+name = "rmk-esp32s3"
+version = "0.2.0"
 authors = ["Haobo Gu <haobogu@outlook.com>"]
 description = "Keyboard firmware written in Rust"
 homepage = "https://github.com/haobogu/rmk"
 repository = "https://github.com/haobogu/rmk"
-readme = "README.md"
-edition = "2021"
+readme = "../../README.md"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-rmk = { version = "0.8", default-features = false, features = [
+rmk = { path = "../../../rmk", default-features = false, features = [
     "esp32s3_ble",
     "log",
     "storage",
-    "vial",
+    "vial"
 ] }
-embassy-executor = { version = "0.9.0" }
-esp-backtrace = { version = "0.18", features = [
+embassy-executor = { version = "0.10" }
+esp-backtrace = { version = "0.19", features = [
     "esp32s3",
     "panic-handler",
     "println",
 ] }
-esp-hal = { version = "1.0", features = ["esp32s3", "unstable"] }
-esp-storage = { version = "0.8", features = ["esp32s3"] }
-esp-alloc = { version = "0.9.0" }
-esp-println = { version = "0.16.0", features = ["esp32s3", "log-04"] }
-esp-radio = { version = "0.17", features = ["esp32s3", "unstable", "ble"] }
-esp-rtos = { version = "0.2", features = ["esp32s3", "esp-radio", "embassy"] }
-esp-bootloader-esp-idf = { version = "0.4", features = ["esp32s3", "log-04"] }
-static_cell = "2"
-bt-hci = { version = "0.6" }
+esp-hal = { version = "1.1", features = ["esp32s3", "unstable"] }
+esp-storage = { version = "0.9", features = ["esp32s3"] }
+esp-alloc = { version = "0.10" }
+esp-println = { version = "0.17", features = ["esp32s3", "log-04"] }
+esp-radio = { version = "0.18", features = ["esp32s3", "unstable", "ble"] }
+esp-rtos = { version = "0.3", features = ["esp32s3", "esp-radio", "embassy"] }
+esp-bootloader-esp-idf = { version = "0.5", features = ["esp32s3", "log-04"] }
+bt-hci = { version = "0.8" }
 rand_core = { version = "0.6", default-features = false }
-embassy-usb-driver = "=0.2.0"
 
 [build-dependencies]
 xz2 = "0.1.7"
@@ -42,7 +40,7 @@ embuild = "0.33"
 cc = "1.2.9"
 
 [[bin]]
-name = "{{ project_name }}"
+name = "rmk-esp32s3"
 test = false
 bench = false
 
@@ -50,6 +48,7 @@ bench = false
 opt-level = 3
 
 [profile.dev]
+# Rust debug is too slow.
 # For debug builds always builds with some optimization
 opt-level = "s"
 
