@@ -1,4 +1,4 @@
-name: Build Firmware
+name: Build Firmware (ESP32-S3)
 
 on:
   push:
@@ -20,36 +20,32 @@ jobs:
       - name: Install Rust
         run: |
           rustup update stable
-          rustup target add thumbv7em-none-eabihf
+          # ESP32-S3 目标架构
+          rustup target add riscv32imc-unknown-none-elf
+          # 如果使用 Xtensa 架构（官方 Rust 支持需要额外配置）
+          # rustup target add xtensa-esp32s3-none-elf
           rustup component add rust-src
 
-      - name: Install cargo-make and flip-link
+      - name: Install cargo-espflash (ESP32 烧录工具)
         run: |
-          cargo install cargo-make
-          cargo install flip-link
+          cargo install cargo-espflash
+          cargo install espflash
 
-      - name: Build firmware
-        working-directory: esp32_planck59
+      - name: Build firmware for ESP32-S3
+        working-directory: esp32_planck59   # 你的项目目录
         run: cargo build --release
         env:
           RUST_MIN_STACK: 67108864
 
-      - name: Generate UF2 (方法1 - 使用 cargo-make)
-        working-directory: nrf52840_ble
-        continue-on-error: true
-        run: cargo make uf2 --release
-
-      - name: Generate UF2 (方法2 - 使用 elf2uf2-rs)
-        working-directory: nrf52840_ble
-        if: always()
+      - name: Convert to binary format (optional)
+        working-directory: esp32_planck59
         run: |
-          cargo install elf2uf2-rs --force
-          elf2uf2-rs target/thumbv7em-none-eabihf/release/planck59 planck59.uf2 || true
+          # 生成 .bin 文件用于烧录
+          espflash save-image --chip esp32s3 target/riscv32imc-unknown-none-elf/release/your-firmware-name ./firmware.bin
+        continue-on-error: true
 
-     
-
-      - name: Upload UF2
+      - name: Upload firmware binary
         uses: actions/upload-artifact@v4
         with:
-          name: planck59-uf2
-          path: nrf52840_ble/*.uf2
+          name: esp32_planck59
+          path: esp32_planck59/*.bin
