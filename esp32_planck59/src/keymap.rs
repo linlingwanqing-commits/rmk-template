@@ -44,11 +44,3 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
     ]
 }
 
-// Tap Dance (Morse) 配置函数
-pub const fn get_tap_dance_config() -> [TapDanceConfig; 3] {
-    [
-        TapDanceConfig::new(TapDanceAction::TapHold(KcEnter, MO(2), Some(CapsLock))),
-        TapDanceConfig::new(TapDanceAction::TapHold(Enter, MO(2), Some(NumLock))),
-        TapDanceConfig::new(TapDanceAction::TapHold(Delete, RShift, None)),
-    ]
-}
