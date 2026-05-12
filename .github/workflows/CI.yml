@@ -1,4 +1,4 @@
-name: Build Firmware (ESP32-S3 Xtensa)
+name: Build Firmware (ESP32-S3)
 
 on:
   push:
@@ -8,34 +8,41 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup ESP32-S3 toolchain
-        uses: esp-rs/xtensa-toolchain@v1
-        with:
-          target: esp32s3
-          default: true
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source "$HOME/.cargo/env"
+          rustup toolchain install nightly
+          rustup component add rust-src --toolchain nightly
+          rustup target add xtensa-esp32s3-none-elf
 
-      - name: Setup Rust cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: "esp32_planck59"
-          cache-targets: false
+      - name: Install espup
+        run: |
+          source "$HOME/.cargo/env"
+          cargo install espup
+          espup install --target=esp32s3
 
       - name: Build firmware
         working-directory: esp32_planck59
         run: |
-          cargo build --release
-        env:
-          RUST_MIN_STACK: 67108864
+          source "$HOME/.cargo/env"
+          source ~/export-esp.sh
+          cargo +esp build --release
 
       - name: Install espflash
-        run: cargo install espflash --quiet
+        run: |
+          source "$HOME/.cargo/env"
+          cargo install espflash --quiet
 
       - name: Convert to binary
         working-directory: esp32_planck59
         run: |
+          source ~/export-esp.sh
           espflash save-image --chip esp32s3 target/xtensa-esp32s3-none-elf/release/rmk-esp32s3 ./firmware.bin
 
       - name: Upload firmware
@@ -43,4 +50,3 @@ jobs:
         with:
           name: rmk-esp32s3-firmware
           path: esp32_planck59/firmware.bin
-          if-no-files-found: error
