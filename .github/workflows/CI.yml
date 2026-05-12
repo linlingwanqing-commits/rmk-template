@@ -1,4 +1,4 @@
-name: Build Firmware (ESP32-S3 RISC-V)
+name: Build Firmware (ESP32-S3 Xtensa)
 
 on:
   push:
@@ -17,12 +17,17 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libudev-dev
 
-      - name: Install Rust
+      - name: Install Rust (nightly)
         run: |
-          rustup update stable
-          rustup target add riscv32imc-unknown-none-elf
-          rustup component add rust-src
-          rustup component add llvm-tools-preview
+          rustup update nightly
+          rustup component add rust-src --toolchain nightly
+          rustup target add xtensa-esp32s3-none-elf
+
+      - name: Install espup (ESP toolchain installer)
+        run: |
+          cargo install espup
+          espup install
+          echo "source ~/export-esp.sh" >> ~/.bashrc
 
       - name: Cache cargo registry
         uses: actions/cache@v4
@@ -35,21 +40,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      - name: Build firmware for ESP32-S3 (RISC-V)
+      - name: Build firmware for ESP32-S3 (Xtensa)
         working-directory: esp32_planck59
         run: |
-          cargo build --release --target riscv32imc-unknown-none-elf
+          source ~/export-esp.sh
+          cargo +esp build --release
+        shell: bash
         env:
           RUST_MIN_STACK: 67108864
 
       - name: Convert to binary format
         working-directory: esp32_planck59
         run: |
-          # 安装 espflash（仅用于转换，不烧录）
+          source ~/export-esp.sh
+          # 安装 espflash（仅用于转换）
           cargo install espflash --quiet
           
-          # 查找生成的 ELF 文件
-          ELF_FILE="target/riscv32imc-unknown-none-elf/release/rmk-esp32s3"
+          # ELF 文件路径
+          ELF_FILE="target/xtensa-esp32s3-none-elf/release/rmk-esp32s3"
           
           if [ -f "$ELF_FILE" ]; then
             # 生成 .bin 文件
@@ -57,9 +65,9 @@ jobs:
             echo "✅ Firmware binary created: firmware.bin"
             ls -lh ./firmware.bin
           else
-            echo "❌ ELF file not found at: $ELF_FILE"
+            echo "❌ ELF file not found!"
             echo "Available files:"
-            ls -la target/riscv32imc-unknown-none-elf/release/
+            ls -la target/xtensa-esp32s3-none-elf/release/
             exit 1
           fi
         shell: bash
@@ -69,7 +77,7 @@ jobs:
         run: |
           echo "📦 Build artifacts:"
           echo "ELF file:"
-          ls -lh target/riscv32imc-unknown-none-elf/release/rmk-esp32s3
+          ls -lh target/xtensa-esp32s3-none-elf/release/rmk-esp32s3
           echo ""
           echo "Binary file:"
           ls -lh firmware.bin 2>/dev/null || echo "No firmware.bin found"
@@ -77,10 +85,10 @@ jobs:
       - name: Upload firmware binary
         uses: actions/upload-artifact@v4
         with:
-          name: rmk-esp32s3-riscv-firmware
+          name: rmk-esp32s3-firmware
           path: |
             esp32_planck59/firmware.bin
-            esp32_planck59/target/riscv32imc-unknown-none-elf/release/rmk-esp32s3
+            esp32_planck59/target/xtensa-esp32s3-none-elf/release/rmk-esp32s3
           if-no-files-found: error
           compression-level: 9
 
