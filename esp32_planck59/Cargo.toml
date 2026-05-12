@@ -1,5 +1,5 @@
 [package]
-name = "rmk-esp32s3"
+name = "planck59"
 version = "0.2.0"
 authors = ["Haobo Gu <haobogu@outlook.com>"]
 description = "Keyboard firmware written in Rust"
@@ -40,7 +40,7 @@ embuild = "0.33"
 cc = "1.2.9"
 
 [[bin]]
-name = "rmk-esp32s3"
+name = "esp32_planck59"
 test = false
 bench = false
 

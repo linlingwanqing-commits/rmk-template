@@ -1,23 +1,23 @@
 use rmk::types::action::KeyAction;
-use rmk::{a, k, layer, mo, to, td};
+use rmk::{a, k, layer, mo, to, td, lt, lm};
 
-pub const ROW: usize = 5;
-pub const COL: usize = 13;
-pub const NUM_LAYER: usize = 4;
+pub(crate) const COL: usize = 13;
+pub(crate) const ROW: usize = 5;
+pub(crate) const NUM_LAYER: usize = 4;
+pub(crate) const NUM_ENCODER: usize = 0;  // 没有编码器
 
 #[rustfmt::skip]
 pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
     [
-        // ========== Layer 0: 基础层 ==========
+        // Layer 0: 基础层
         layer!([
-            [k!(Escape), k!(Key1), k!(Key2), k!(Key3), k!(Key4), k!(Key5), k!(Key6), k!(Key7), k!(Key8), k!(Key9), k!(Key0), k!(Backslash), k!(Backspace)],
-            [k!(Tab), k!(KeyQ), k!(KeyW), k!(KeyE), k!(KeyR), k!(KeyT), k!(KeyY), k!(KeyU), k!(KeyI), k!(KeyO), k!(KeyP), k!(LeftBracket), k!(RightBracket)],
-            [td!(0), k!(KeyA), k!(KeyS), k!(KeyD), k!(KeyF), k!(KeyG), k!(KeyH), k!(KeyJ), k!(KeyK), k!(KeyL), k!(Semicolon), k!(Quote), td!(1)],
-            [k!(LeftShift), k!(KeyZ), k!(KeyX), k!(KeyC), k!(KeyV), k!(KeyB), k!(KeyN), k!(KeyM), k!(Comma), k!(Period), k!(UpArrow), k!(Slash), td!(2)],
-            [k!(LeftControl), k!(LeftGui), k!(LeftAlt), k!(Space), k!(Space), mo!(1), a!(No), mo!(3), k!(Space), k!(LeftArrow), k!(DownArrow), k!(RightArrow), k!(RightControl)]
+            [k!(Escape), k!(Kc1), k!(Kc2), k!(Kc3), k!(Kc4), k!(Kc5), k!(Kc6), k!(Kc7), k!(Kc8), k!(Kc9), k!(Kc0), k!(Backslash), k!(Backspace)],
+            [k!(Tab), k!(Q), k!(W), k!(E), k!(R), k!(T), k!(Y), k!(U), k!(I), k!(O), k!(P), k!(LeftBracket), k!(RightBracket)],
+            [td!(0), k!(A), k!(S), k!(D), k!(F), k!(G), k!(H), k!(J), k!(K), k!(L), k!(Semicolon), k!(Quote), td!(1)],
+            [k!(LShift), k!(Z), k!(X), k!(C), k!(V), k!(B), k!(N), k!(M), k!(Comma), k!(Dot), k!(Up), k!(Slash), td!(2)],
+            [k!(LCtrl), k!(LGui), k!(LAlt), k!(Space), k!(Space), mo!(1), a!(No), mo!(3), k!(Space), k!(Left), k!(Down), k!(Right), k!(RCtrl)]
         ]),
-
-        // ========== Layer 1: Fn层 (MO1) ==========
+        // Layer 1: Fn层
         layer!([
             [k!(Grave), k!(F1), k!(F2), k!(F3), k!(F4), k!(F5), k!(F6), k!(F7), k!(F8), k!(F9), k!(F10), k!(F11), k!(F12)],
             [a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No)],
@@ -25,8 +25,7 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No)],
             [a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No)]
         ]),
-
-        // ========== Layer 2: Stop/PrtSc层 ==========
+        // Layer 2: Sleep/PrtSc层
         layer!([
             [k!(Stop), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), k!(PrintScreen)],
             [a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No)],
@@ -34,14 +33,22 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No)],
             [k!(Home), k!(End), k!(PageUp), k!(PageDown), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No), a!(No)]
         ]),
-
-        // ========== Layer 3: 数字小键盘层 ==========
+        // Layer 3: 数字小键盘层
         layer!([
             [k!(Escape), k!(KpMinus), k!(KpPlus), k!(KpSlash), k!(Kp1), k!(Kp2), k!(Kp3), k!(Kp4), k!(Kp5), k!(Kp6), k!(Kp7), k!(Kp8), k!(Backspace)],
-            [k!(Kp7), k!(Kp8), k!(Kp9), k!(Tab), k!(KeyQ), k!(KeyW), k!(KeyE), k!(KeyR), k!(KeyT), k!(KeyY), k!(KeyU), k!(KeyI), k!(KeyO)],
-            [k!(Kp4), k!(Kp5), k!(Kp6), k!(KpAsterisk), k!(KeyA), k!(KeyS), k!(KeyD), k!(KeyF), k!(KeyG), k!(KeyH), k!(KeyJ), k!(KeyK), k!(KeyL)],
-            [k!(Kp1), k!(Kp2), k!(Kp3), k!(LeftShift), k!(KeyZ), k!(KeyX), k!(KeyC), k!(KeyV), k!(KeyB), k!(KeyN), k!(KeyM), k!(KeyP), k!(Backslash)],
-            [k!(Backspace), k!(KpDot), k!(Kp0), k!(LeftControl), k!(LeftGui), mo!(1), a!(No), k!(LeftAlt), k!(Space), k!(LeftArrow), k!(DownArrow), k!(UpArrow), k!(RightArrow)]
+            [k!(Kp7), k!(Kp8), k!(Kp9), k!(Tab), k!(Q), k!(W), k!(E), k!(R), k!(T), k!(Y), k!(U), k!(I), k!(O)],
+            [k!(Kp4), k!(Kp5), k!(Kp6), k!(KpAsterisk), k!(A), k!(S), k!(D), k!(F), k!(G), k!(H), k!(J), k!(K), k!(L)],
+            [k!(Kp1), k!(Kp2), k!(Kp3), k!(LShift), k!(Z), k!(X), k!(C), k!(V), k!(B), k!(N), k!(M), k!(P), k!(Backslash)],
+            [k!(Backspace), k!(KpDot), k!(Kp0), k!(LCtrl), k!(LGui), mo!(1), a!(No), k!(LAlt), k!(Space), k!(Left), k!(Down), k!(Up), k!(Right)]
         ]),
+    ]
+}
+
+// Tap Dance (Morse) 配置函数
+pub const fn get_tap_dance_config() -> [TapDanceConfig; 3] {
+    [
+        TapDanceConfig::new(TapDanceAction::TapHold(KcEnter, MO(2), Some(CapsLock))),
+        TapDanceConfig::new(TapDanceAction::TapHold(Enter, MO(2), Some(NumLock))),
+        TapDanceConfig::new(TapDanceAction::TapHold(Delete, RShift, None)),
     ]
 }

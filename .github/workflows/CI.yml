@@ -1,8 +1,8 @@
-name: Build Firmware (ESP32-S3)
+name: Build Firmware (ESP32-S3 RISC-V)
 
 on:
   push:
-    branches: [ main, master, s46r ]
+    branches: [main, master, s46r]
   workflow_dispatch:
 
 env:
@@ -20,46 +20,76 @@ jobs:
       - name: Install Rust
         run: |
           rustup update stable
-          # ESP32-S3 目标架构
           rustup target add riscv32imc-unknown-none-elf
-          # 如果使用 Xtensa 架构（官方 Rust 支持需要额外配置）
-          # rustup target add xtensa-esp32s3-none-elf
           rustup component add rust-src
+          rustup component add llvm-tools-preview
 
-      - name: Install cargo-espflash (ESP32 烧录工具)
-        run: |
-          cargo install cargo-espflash
-          cargo install espflash
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            esp32_planck59/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('esp32_planck59/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
 
-      - name: Install esp toolchain
-        run: |
-          cargo install espup
-          espup install
-          source ~/export-esp.sh
-        shell: bash
-
-      - name: Build firmware
+      - name: Build firmware for ESP32-S3 (RISC-V)
         working-directory: esp32_planck59
         run: |
-          source ~/export-esp.sh
-          cargo build --release
-        shell: bash
-
-      - name: Build firmware for ESP32-S3
-        working-directory: esp32_planck59   # 你的项目目录
-        run: cargo build --release
+          cargo build --release --target riscv32imc-unknown-none-elf
         env:
           RUST_MIN_STACK: 67108864
 
-      - name: Convert to binary format (optional)
+      - name: Convert to binary format
         working-directory: esp32_planck59
         run: |
-          # 生成 .bin 文件用于烧录
-          espflash save-image --chip esp32s3 target/riscv32imc-unknown-none-elf/release/your-firmware-name ./firmware.bin
-        continue-on-error: true
+          # 安装 espflash（仅用于转换，不烧录）
+          cargo install espflash --quiet
+          
+          # 查找生成的 ELF 文件
+          ELF_FILE="target/riscv32imc-unknown-none-elf/release/rmk-esp32s3"
+          
+          if [ -f "$ELF_FILE" ]; then
+            # 生成 .bin 文件
+            espflash save-image --chip esp32s3 "$ELF_FILE" ./firmware.bin
+            echo "✅ Firmware binary created: firmware.bin"
+            ls -lh ./firmware.bin
+          else
+            echo "❌ ELF file not found at: $ELF_FILE"
+            echo "Available files:"
+            ls -la target/riscv32imc-unknown-none-elf/release/
+            exit 1
+          fi
+        shell: bash
+
+      - name: List build artifacts
+        working-directory: esp32_planck59
+        run: |
+          echo "📦 Build artifacts:"
+          echo "ELF file:"
+          ls -lh target/riscv32imc-unknown-none-elf/release/rmk-esp32s3
+          echo ""
+          echo "Binary file:"
+          ls -lh firmware.bin 2>/dev/null || echo "No firmware.bin found"
 
       - name: Upload firmware binary
         uses: actions/upload-artifact@v4
         with:
-          name: esp32_planck59
-          path: esp32_planck59/*.bin
+          name: rmk-esp32s3-riscv-firmware
+          path: |
+            esp32_planck59/firmware.bin
+            esp32_planck59/target/riscv32imc-unknown-none-elf/release/rmk-esp32s3
+          if-no-files-found: error
+          compression-level: 9
+
+      - name: Upload build logs (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            esp32_planck59/target/debug/build/
+            esp32_planck59/target/release/build/
+          if-no-files-found: ignore

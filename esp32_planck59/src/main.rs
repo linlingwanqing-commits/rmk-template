@@ -67,14 +67,35 @@ async fn main(_s: Spawner) {
     let flash = async_flash_wrapper(flash);
 
     // Initialize the IO pins
-    let (row_pins, col_pins) = config_matrix_pins_esp!(
-        peripherals: peripherals,
-        input: [GPIO4, GPIO5, GPIO6, GPIO7, GPIO15],   // 行
-        output: [GPIO16, GPIO17, GPIO18, GPIO8, GPIO9, GPIO10, GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO2, GPIO1]  // 列
-    );
+    let (row_pins, col_pins) = config_matrix_pins_esp!(peripherals: peripherals, input: [GPIO4, GPIO5, GPIO6, GPIO7, GPIO15], output: [GPIO16, GPIO17, GPIO18, GPIO8, GPIO9, GPIO10, GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO2, GPIO1]);
 
     // RMK config
-    let vial_config = VialConfig::new(VIAL_KEYBOARD_ID, VIAL_KEYBOARD_DEF, &[(0, 0), (1, 1)]);
+    let vial_config = VialConfig::new(VIAL_KEYBOARD_ID, VIAL_KEYBOARD_DEF, &[
+                "0,0", "0,1", "0,2", "0,3", "0,4", "0,5", "0,6", "0,7", "0,8", "0,9", "0,10", "0,11", "0,12"
+            ],
+            [
+                "1,0", "1,1", "1,2", "1,3", "1,4", "1,5", "1,6", "1,7", "1,8", "1,9", "1,10", "1,11", "1,12"
+            ],
+            [
+                "2,0", "2,1", "2,2", "2,3", "2,4", "2,5", "2,6", "2,7", "2,8", "2,9", "2,10", "2,11", "2,12"
+            ],
+            [
+                "3,0", "3,1", "3,2", "3,3", "3,4", "3,5", "3,6", "3,7", "3,8", "3,9", "3,10", "3,11", "3,12"
+            ],
+            [
+                 "4,0",
+                 "4,1",
+                 "4,2",
+                 "4,3",
+                {"w": 1.25}, "4,4",
+                {"w": 1.25}, "4,5",
+                {"w": 1.25}, "4,7",
+                {"w": 1.25}, "4,8",
+                 "4,9",
+                 "4,10",
+                 "4,11",
+                 "4,12"
+            ]);
     let storage_config = StorageConfig {
         start_addr: 0x3f0000,
         num_sectors: 16,
