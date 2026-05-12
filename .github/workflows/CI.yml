@@ -11,59 +11,89 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@nightly
+      # 步骤1: 安装基础 Rust（但不添加 xtensa 目标）
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
         with:
           components: rust-src
-          targets: xtensa-esp32s3-none-elf
 
-      - name: Install espup
+      # 步骤2: 安装 espup 和 ESP32-S3 专用工具链
+      - name: Install ESP toolchain
         run: |
           cargo install espup
           espup install --target=esp32s3
 
+      # 步骤3: 设置环境变量
+      - name: Set ESP environment
+        run: |
+          echo "source $HOME/export-esp.sh" >> ~/.bashrc
+          source $HOME/export-esp.sh
+          echo "ESP_TOOLCHAIN_PATH=$HOME/.espressif/tools/rust-esp/xtensa-esp32s3-none-elf/esp/1.81.0.0/bin" >> $GITHUB_ENV
+          echo "$HOME/.espressif/tools/rust-esp/xtensa-esp32s3-none-elf/esp/1.81.0.0/bin" >> $GITHUB_PATH
+
+      # 步骤4: 检查项目结构（调试用）
       - name: Check project structure
         working-directory: esp32_planck59
         run: |
-          echo "=== Project structure ==="
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Directory contents ==="
           ls -la
-          echo "=== src directory ==="
-          ls -la src/ || echo "No src directory"
+          echo "=== Source directory ==="
+          ls -la src/ || echo "src directory not found"
           echo "=== Cargo.toml ==="
-          cat Cargo.toml
+          cat Cargo.toml | head -20
 
-      - name: Build firmware (with explicit bin target)
+      # 步骤5: 修复 Cargo.toml（如果需要）
+      - name: Fix Cargo.toml if needed
         working-directory: esp32_planck59
         run: |
-          # 如果存在 src/main.rs，使用默认的 bin 名称
-          if [ -f src/main.rs ]; then
-            cargo +esp build --release --bin rmk-esp32s3 2>/dev/null || cargo +esp build --release
+          # 备份原文件
+          cp Cargo.toml Cargo.toml.bak
+          # 删除或注释掉 [[bin]] 部分
+          sed -i '/^\[\[bin\]\]$/,/^$/s/^/# /' Cargo.toml
+          echo "Fixed Cargo.toml:"
+          cat Cargo.toml
+
+      # 步骤6: 编译固件
+      - name: Build firmware
+        working-directory: esp32_planck59
+        run: |
+          source $HOME/export-esp.sh
+          # 尝试编译，如果失败则使用默认 bin 名称
+          if cargo +esp build --release 2>/dev/null; then
+            echo "Build successful"
           else
-            cargo +esp build --release
+            echo "Trying with explicit bin target..."
+            cargo +esp build --release --bin rmk-esp32s3 || cargo +esp build --release --bin esp32_planck59
           fi
 
+      # 步骤7: 安装 espflash
       - name: Install espflash
         run: |
           cargo install espflash --quiet
 
-      - name: Find and convert binary
+      # 步骤8: 查找并转换二进制文件
+      - name: Convert to binary
         working-directory: esp32_planck59
         run: |
-          # 查找生成的 ELF 文件
-          ELF_FILE=$(find target/xtensa-esp32s3-none-elf/release/ -name "rmk-esp32s3" -o -name "esp32_planck59" -o -name "*.elf" | head -1)
+          source $HOME/export-esp.sh
+          # 查找 ELF 文件
+          ELF_FILE=$(find target/xtensa-esp32s3-none-elf/release/ -type f -executable ! -name "*.d" | head -1)
           if [ -n "$ELF_FILE" ]; then
             echo "Found ELF: $ELF_FILE"
             espflash save-image --chip esp32s3 "$ELF_FILE" ./firmware.bin
           else
             echo "No ELF file found!"
-            find target/ -name "*.elf" 2>/dev/null || echo "No ELF files"
-            ls -la target/xtensa-esp32s3-none-elf/release/ 2>/dev/null || echo "Build directory not found"
+            echo "Searching in: target/xtensa-esp32s3-none-elf/release/"
+            ls -la target/xtensa-esp32s3-none-elf/release/ || echo "Directory not found"
             exit 1
           fi
 
+      # 步骤9: 上传固件
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: planck59-firmware
           path: esp32_planck59/firmware.bin
-          if-no-files-found: warn
+          if-no-files-found: error
