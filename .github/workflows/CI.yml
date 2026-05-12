@@ -11,38 +11,59 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ESP Rust toolchain
-        uses: esp-rs/xtensa-toolchain@v1.5
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
         with:
-          build-targets: esp32s3
-          default: true
-          enable-werror: false
+          components: rust-src
+          targets: xtensa-esp32s3-none-elf
 
-      - name: Cache cargo
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            esp32_planck59/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('esp32_planck59/Cargo.lock') }}
+      - name: Install espup
+        run: |
+          cargo install espup
+          espup install --target=esp32s3
 
-      - name: Build firmware
+      - name: Check project structure
         working-directory: esp32_planck59
         run: |
-          cargo build --release
+          echo "=== Project structure ==="
+          ls -la
+          echo "=== src directory ==="
+          ls -la src/ || echo "No src directory"
+          echo "=== Cargo.toml ==="
+          cat Cargo.toml
+
+      - name: Build firmware (with explicit bin target)
+        working-directory: esp32_planck59
+        run: |
+          # 如果存在 src/main.rs，使用默认的 bin 名称
+          if [ -f src/main.rs ]; then
+            cargo +esp build --release --bin rmk-esp32s3 2>/dev/null || cargo +esp build --release
+          else
+            cargo +esp build --release
+          fi
 
       - name: Install espflash
         run: |
           cargo install espflash --quiet
 
-      - name: Generate binary
+      - name: Find and convert binary
         working-directory: esp32_planck59
         run: |
-          espflash save-image --chip esp32s3 target/xtensa-esp32s3-none-elf/release/rmk-esp32s3 ./firmware.bin
+          # 查找生成的 ELF 文件
+          ELF_FILE=$(find target/xtensa-esp32s3-none-elf/release/ -name "rmk-esp32s3" -o -name "esp32_planck59" -o -name "*.elf" | head -1)
+          if [ -n "$ELF_FILE" ]; then
+            echo "Found ELF: $ELF_FILE"
+            espflash save-image --chip esp32s3 "$ELF_FILE" ./firmware.bin
+          else
+            echo "No ELF file found!"
+            find target/ -name "*.elf" 2>/dev/null || echo "No ELF files"
+            ls -la target/xtensa-esp32s3-none-elf/release/ 2>/dev/null || echo "Build directory not found"
+            exit 1
+          fi
 
-      - name: Upload artifact
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: planck59-firmware
           path: esp32_planck59/firmware.bin
+          if-no-files-found: warn
