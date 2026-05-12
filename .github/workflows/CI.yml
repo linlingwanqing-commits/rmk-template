@@ -1,8 +1,8 @@
-name: Build Firmware
+name: Build Firmware (ESP32-S3)
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, s46r]
   workflow_dispatch:
 
 jobs:
@@ -10,15 +10,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Build ESP32-S3 firmware
-        uses: esp-rs/esp-build@v1
+
+      - name: Install ESP Rust toolchain
+        uses: esp-rs/xtensa-toolchain@v1.5
         with:
-          chip: esp32s3
-          directory: esp32_planck59
-          
-      - name: Upload firmware
+          build-targets: esp32s3
+          default: true
+          enable-werror: false
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            esp32_planck59/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('esp32_planck59/Cargo.lock') }}
+
+      - name: Build firmware
+        working-directory: esp32_planck59
+        run: |
+          cargo build --release
+
+      - name: Install espflash
+        run: |
+          cargo install espflash --quiet
+
+      - name: Generate binary
+        working-directory: esp32_planck59
+        run: |
+          espflash save-image --chip esp32s3 target/xtensa-esp32s3-none-elf/release/rmk-esp32s3 ./firmware.bin
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: firmware
+          name: planck59-firmware
           path: esp32_planck59/firmware.bin
