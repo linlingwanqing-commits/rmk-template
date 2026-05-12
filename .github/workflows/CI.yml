@@ -11,38 +11,65 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 步骤1: 安装基础 Rust
       - name: Install stable Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rust-src
 
+      # 步骤2: 安装 espup
       - name: Install espup
         run: |
           cargo install espup
 
+      # 步骤3: 安装 ESP32-S3 工具链（修正参数）
       - name: Install ESP toolchain
         run: |
+          # 使用 --targets 而不是 --target
           espup install --targets esp32s3
 
+      # 步骤4: 设置环境变量
       - name: Set ESP environment
         run: |
+          echo "source $HOME/export-esp.sh" >> ~/.bashrc
           source $HOME/export-esp.sh
 
+      # 步骤5: 检查并修复项目结构
+      - name: Fix project structure
+        working-directory: esp32_planck59
+        run: |
+          # 确保有 src/main.rs
+          if [ ! -f src/main.rs ]; then
+            echo "Error: src/main.rs not found!"
+            echo "Available files:"
+            ls -la src/ || echo "src directory not found"
+            exit 1
+          fi
+          
+          # 修复 Cargo.toml，移除 [[bin]] 部分
+          if grep -q "\[\[bin\]\]" Cargo.toml; then
+            echo "Removing [[bin]] section from Cargo.toml"
+            sed -i '/^\[\[bin\]\]$/,/^$/d' Cargo.toml
+          fi
+
+      # 步骤6: 编译固件
       - name: Build firmware
         working-directory: esp32_planck59
         run: |
           source $HOME/export-esp.sh
           cargo +esp build --release
 
+      # 步骤7: 安装 espflash
       - name: Install espflash
         run: |
           cargo install espflash --quiet
 
+      # 步骤8: 生成二进制文件（修改这里）
       - name: Generate binary
         working-directory: esp32_planck59
         run: |
           source $HOME/export-esp.sh
-          # 添加 planck59 的查找
+          # 查找生成的 ELF 文件
           if [ -f target/xtensa-esp32s3-none-elf/release/planck59 ]; then
             espflash save-image --chip esp32s3 target/xtensa-esp32s3-none-elf/release/planck59 ./firmware.bin
           elif [ -f target/xtensa-esp32s3-none-elf/release/rmk-esp32s3 ]; then
@@ -55,6 +82,7 @@ jobs:
             exit 1
           fi
 
+      # 步骤9: 上传固件
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
