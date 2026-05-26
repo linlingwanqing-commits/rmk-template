@@ -84,9 +84,8 @@ jobs:
       - name: Build and generate UF2 firmware
         working-directory: esp32_planck59
         run: |
-        source $HOME/export-esp.sh
-    # 使用 cargo-espflash 将 ELF 文件直接转换为 UF2
-        cargo espflash flash --release --monitor --target xtensa-esp32s3-none-elf --flash-size 16mb --baud 460800 --package <planck59> --chip esp32s3 --example <esp32_planck59> --uf2 firmware.uf2
+              source $HOME/export-esp.sh
+              cargo espflash flash --release --monitor --target xtensa-esp32s3-none-elf --flash-size 16mb --baud 460800 --package planck59 --chip esp32s3 --example esp32_planck59 --uf2 firmware.uf2
     # 如果你没有指定example，可能需要使用 cargo espflash save-image --chip esp32s3 --release --uf2 firmware.uf2
     # 如果上面的命令出错，可以尝试更传统的 elf2uf2-rs 工具：
     # cargo install elf2uf2-rs
