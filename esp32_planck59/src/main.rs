@@ -72,7 +72,7 @@ async fn main(_s: Spawner) {
     let (row_pins, col_pins) = config_matrix_pins_esp!(
         peripherals: peripherals, 
         input: [GPIO4, GPIO5, GPIO6, GPIO7, GPIO15],      // 5个行引脚
-        output: [GPIO16, GPIO17, GPIO18, GPIO8, GPIO9, GPIO10, GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO2, GPIO1]  // 13个列引脚
+        output: [GPIO16, GPIO17, GPIO18, GPIO21, GPIO14, GPIO12, GPIO2, GPIO42, GPIO41, GPIO40, GPIO39, GPIO38, GPIO9]  // 13个列引脚
     );
 
     // RMK config
