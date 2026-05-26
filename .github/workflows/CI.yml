@@ -46,7 +46,7 @@ jobs:
             exit 1
           fi
           
-          # 修复 Cargo.toml，移除 [[bin]] 部分
+          # 修复 Cargo.toml,移除 [[bin]] 部分
           if grep -q "\[\[bin\]\]" Cargo.toml; then
             echo "Removing [[bin]] section from Cargo.toml"
             sed -i '/^\[\[bin\]\]$/,/^$/d' Cargo.toml
