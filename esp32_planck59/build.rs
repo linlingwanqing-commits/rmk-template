@@ -12,6 +12,7 @@ fn main() {
     generate_vial_config();
 
     println!("cargo:rustc-link-arg-bins=-Tlinkall.x");
+    println!("cargo:rustc-link-arg-bins=-Trom_functions.x");
 
     // Set the extra linker script from defmt
     // println!("cargo:rustc-link-arg=-Tdefmt.x");
